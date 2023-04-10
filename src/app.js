@@ -9,7 +9,7 @@ const userList = [];
 const tweetList = [];
 
 app.post("/sign-up", (req, res) => {
-    const {username, avatar} = res.body
+    const {username, avatar} = req.body
     const user = { username, avatar}
     userList.push(user)
     res.status(201).send("OK")
