@@ -24,11 +24,12 @@ app.post("/tweets", (req, res) => {
     if(!isAuthorized){
         res.status(401).send("UNAUTHORIZED");
         return;
-    }else{
+    }
+    
         const newTweet = {username, tweet}
         tweetList.push(newTweet);
         res.status(201).send("OK");
-    }   
+     
 });
 
 
