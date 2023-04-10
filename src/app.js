@@ -16,21 +16,19 @@ app.post("/sign-up", (req, res) => {
 })
 
 app.post("/tweets", (req, res) => {
-    const {tweet} = req.body;
-    const username = req.headers.user;
-
-    const isAuthorized = users.some( (t) => t.username === username );
-
-    if(!isAuthorized){
-        res.status(401).send("UNAUTHORIZED");
-        return;
+    const { username, tweet } = req.body;
+    const { user } = req.headers;
+  
+    const isAuthorized = users.find((u) => u.username === (user || username));
+    if (!isAuthorized) {
+      return res.sendStatus(401);
     }
-
-        const newTweet = {username, tweet}
-        tweetList.push(newTweet);
-        res.status(201).send("OK");
-     
-});
+  
+    const newTweet = { username: user || username, tweet };
+    tweetList.push(newTweet);
+    res.status(201).send("OK");
+  });
+  
 
 app.get("/tweets", (req, res) => {
     const page = parseInt(req.query.page) || 1;
