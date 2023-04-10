@@ -35,33 +35,32 @@ app.post("/tweets", (req, res) => {
 app.get("/tweets", (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const maxAmount = 10;
-    const start = (page - 1) * maxAmount;
-    const end = page * maxAmount;
-   
+    const startIndex = (page - 1) * maxAmount;
+    const endIndex = page * maxAmount;
+
   
     if (page < 1) {
       return res.status(400).send("Informe uma página válida!");
     }
   
-    let collectedTweets = 0;
-    for (let i = tweetList.length - 1; i >= 0 && collectedTweets < maxAmount; i--) {
-      const tweet = tweetList[i];
+    const filteredTweets = tweets.filter((tweet) => {
       const user = userList.find((u) => u.username === tweet.username || u.avatar === tweet.username);
-  
       if (user) {
         tweetList.push({ ...user, tweet: tweet.tweet });
-        collectedTweets++;
+        return true;
       }
-    }
+      return false;
+    });
   
     const viewedTweets = {
       page: page,
-      tweets: tweetList.slice(start, end),
-      totalPages: Math.ceil(tweetList.length / maxAmount),
+      tweets: tweetList.slice(startIndex, endIndex),
+      totalPages: Math.ceil(filteredTweets.length / maxAmount),
     };
   
     res.send(viewedTweets);
   });
+  
   
 
 
